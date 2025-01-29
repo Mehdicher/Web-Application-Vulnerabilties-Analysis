@@ -25,7 +25,7 @@ app.use('/protected', (req, res, next) => {
   }
   next();
 });
-app.use('/protected', express.static('private/protected'));
+app.use('/protected', express.static(path.join(__dirname, 'private/protected')));
 
 // Session management
 app.use(
@@ -88,7 +88,7 @@ app.get('/', (req, res) => {
 // Register route
 app.post('/register', async (req, res) => {
   const { username, password } = req.body;
-  console.log("Received register request:", username, password); 
+  console.log("Received register request:", username, password);
   const sanitizedUsername = sanitizeInput(username);
 
   if (!sanitizedUsername || !password) {
@@ -105,8 +105,10 @@ app.post('/register', async (req, res) => {
     data.users.push({ username: sanitizedUsername, password: hashedPassword });
     await writeData(data);
 
+    // Redirect to the login page after successful registration
     res.status(201).json({ message: 'User registered successfully.' });
   } catch (err) {
+    console.error("Registration error:", err);
     res.status(500).json({ error: 'Internal server error.' });
   }
 });
@@ -114,7 +116,7 @@ app.post('/register', async (req, res) => {
 // Login route
 app.post('/login', loginLimiter, async (req, res) => {
   const { username, password } = req.body;
-  console.log("Login attempt by:", username); 
+  console.log("Login attempt by:", username);
   const sanitizedUsername = sanitizeInput(username);
 
   try {
@@ -123,15 +125,27 @@ app.post('/login', loginLimiter, async (req, res) => {
     console.log("User found in DB:", user);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-        console.log("Invalid credentials for:", username);
-        return res.status(401).json({ error: 'Invalid credentials.' });
+      console.log("Invalid credentials for:", username);
+      return res.status(401).json({ error: 'Invalid credentials.' });
     }
 
+    // Set session data
     req.session.user = { username: user.username };
+    console.log("Session set for user:", req.session.user);
+
+    // Redirect to the dashboard
     res.redirect('/protected/dashboard.html');
   } catch (err) {
+    console.error("Login error:", err);
     res.status(500).json({ error: 'Internal server error.' });
   }
+});
+
+app.get('/dashboard', (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send('Unauthorized');
+  }
+  res.redirect('/protected/dashboard.html');
 });
 
 // Logout route
