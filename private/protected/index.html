@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #011052 0%, #a580cb 100%);
+            color: #fff;
+        }
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 80px);
+            padding: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .tasks-button {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white;
+        }
+        .logout-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Your Dashboard</h1>
+    </header>
+    <main>
+        <h1>Welcome back! What would you like to do next? Manage your tasks or log out?</h1>
+        <div class="nav-buttons">
+            <button class="tasks-button" onclick="navigateToTasks()">Manage Tasks</button>
+            <button class="logout-button" onclick="logout()">Logout</button>
+        </div>
+    </main>
+
+
+    <script>
+        function navigateToTasks() {
+            window.location.href = '/protected/dashboard.html';
+        }
+
+        function logout() {
+            fetch('/logout')
+                .then(() => {
+                    window.location.href = '/public/login.html';
+                })
+                .catch(() => {
+                    alert('Logout failed. Please try again.');
+                });
+        }
+    </script>
+</body>
+</html>

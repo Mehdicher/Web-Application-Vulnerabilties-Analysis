@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #011052 0%, #a580cb 100%);
+            color: #fff;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        main {
+            padding: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Task Form */
+        .task-form {
+            margin: 20px auto;
+            max-width: 500px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #fff;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Task Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
+        .delete-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .delete-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Task Manager</h1>
+    </header>
+    <main>
+        <div class="task-form">
+            <h2>Add a New Task</h2>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="task">Task</label>
+                    <input type="text" id="task" name="task" placeholder="Enter your task" required>
+                </div>
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        <h2>Your Tasks</h2>
+        <table id="tasksTable">
+            <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Tasks will be dynamically added here -->
+            </tbody>
+        </table>
+    </main>
+
+    <script>
+        const taskForm = document.getElementById('taskForm');
+        const tasksTable = document.getElementById('tasksTable').querySelector('tbody');
+
+        // Fetch tasks on load
+        async function fetchTasks() {
+            try {
+                const response = await fetch('/tasks');
+                if (response.ok) {
+                    const tasks = await response.json();
+                    tasksTable.innerHTML = '';
+                    tasks.forEach(task => addTaskToTable(task));
+                } else {
+                    console.error('Failed to fetch tasks');
+                }
+            } catch (err) {
+                console.error('Error fetching tasks:', err);
+            }
+        }
+
+        // Add task to the table
+        function addTaskToTable(task) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${task.task}</td>
+                <td><button class="delete-button" data-id="${task.id}">Delete</button></td>
+            `;
+            tasksTable.appendChild(row);
+        }
+
+        // Add a new task
+        taskForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const taskInput = document.getElementById('task');
+            const task = taskInput.value;
+
+            try {
+                const response = await fetch('/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ task })
+                });
+
+                if (response.ok) {
+                    fetchTasks();
+                    taskInput.value = '';
+                } else {
+                    console.error('Failed to add task');
+                }
+            } catch (err) {
+                console.error('Error adding task:', err);
+            }
+        });
+
+        // Delete a task
+        tasksTable.addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-button')) {
+                const taskId = e.target.getAttribute('data-id');
+
+                try {
+                    const response = await fetch(`/tasks/${taskId}`, {
+                        method: 'DELETE'
+                    });
+
+                    if (response.ok) {
+                        fetchTasks();
+                    } else {
+                        console.error('Failed to delete task');
+                    }
+                } catch (err) {
+                    console.error('Error deleting task:', err);
+                }
+            }
+        });
+
+        // Initial fetch of tasks
+        fetchTasks();
+    </script>
+</body>
+</html>

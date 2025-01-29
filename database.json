@@ -1,0 +1,66 @@
+{
+  "users": [
+    {
+      "username": "user1",
+      "password": "$2b$10$04Ts22OQT0IOb97CFVnTNOH.hANxfwfc/FJGkI8MUmcVhpYUVIl8a"
+    },
+    {
+      "username": "user2",
+      "password": "password2"
+    },
+    {
+      "username": "user3",
+      "password": "hello"
+    },
+    {
+      "username": "mehdi",
+      "password": "$2b$10$kMlsBpHubBg2QogZZ3205utqxSr/WeZed0WLo58VY0pJ4S8mkAf/G"
+    },
+    {
+      "username": "tmimiMehdi",
+      "password": "$2b$10$.GtwRkSC2Vtxav3q2UHrtewja/QtaWQ417mjuBy.O0NGJ.Y8drpfG"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1674220800000,
+      "task": "Buy groceries",
+      "user": "user1"
+    },
+    {
+      "id": 1674220810000,
+      "task": "Read a book",
+      "user": "user1"
+    },
+    {
+      "id": 1674220820000,
+      "task": "Complete project",
+      "user": "user2"
+    },
+    {
+      "id": 1674220830000,
+      "task": "Plan vacation",
+      "user": "user2"
+    },
+    {
+      "id": 1738161008329,
+      "task": "go to the Gym",
+      "user": "user1"
+    },
+    {
+      "id": 1738176583420,
+      "task": "hacki Tmimi",
+      "user": "mehdi"
+    },
+    {
+      "id": 1738176685930,
+      "task": "Give Mehdi Cherkaoui a very good note",
+      "user": "tmimiMehdi"
+    },
+    {
+      "id": 1738178702314,
+      "task": "find vulnerabilties",
+      "user": "mehdi"
+    }
+  ]
+}
